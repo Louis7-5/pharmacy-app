@@ -173,19 +173,6 @@ class PharmacyApp:
             self.db.rollback()  # Important to rollback on failure
             print(f"Error adding medicine: {e}")
 
-        # print("\n--- Add New Medicine ---")
-        # name = input("Medicine name: ").strip()
-        # category = input("Category: ").strip()
-        # price = self.input_float("Price per unit: ")
-        # quantity = self.input_int("Quantity in stock: ")
-        # expiry_date = self.input_date("Expiry date (YYYY-MM-DD): ")
-
-        # med = Medicine(self.next_med_id, name, category, price, quantity, expiry_date)
-        # self.medicines.append(med)
-        # self.next_med_id += 1
-        # self.save_medicines()
-        # print(f"Medicine'{name}'added with ID{med.med_id}.")
-
     def update_medicine(self):
         print("\n--- Update Medicine ---")
         med_id = self.input_int("Enter medicine ID to update: ")
