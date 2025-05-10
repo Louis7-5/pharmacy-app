@@ -160,7 +160,6 @@ class PharmacyApp:
     # --- Medicine Management ---
 
     def add_medicine(self, name, category, price, quantity, expiry_date):
-
         try:
             query = """
             INSERT INTO medicines (name, category, price, quantity, expiry_date)
@@ -259,15 +258,18 @@ class PharmacyApp:
 
     # --- Customer Management ---
 
-    def add_customer(self):
-        print("\n--- Add New Customer ---")
-        name = input("Customer name: ").strip()
-        phone = input("Phone number: ").strip()
-        cust = Customer(self.next_cust_id, name, phone)
-        self.customers.append(cust)
-        self.next_cust_id += 1
-        self.save_customers()
-        print(f"Customer '{name}' added with ID {cust.cust_id}.")
+    def add_customer(self, name, phone):
+        try:
+            query = """
+            INSERT INTO customers (name, phone)
+            VALUES (%s, %s)
+        """
+            self.cursor.execute(query, (name, phone))
+            self.db.commit()
+            print("Customer added successfully.")
+        except Exception as e:
+            self.db.rollback()  # Important to rollback on failure
+            print(f"Error adding customer: {e}")
 
     def list_customers(self):
         print("\n--- Customer List ---")
