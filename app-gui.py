@@ -115,11 +115,13 @@ class PharmacyApp:
             json.dump([m.to_dict() for m in self.medicines], f, indent=4)
 
     def load_customers(self):
-        if not os.path.exists(self.customers_file):
+        try:
+            self.cursor.execute("SELECT * FROM customers")
+            rows = self.cursor.fetchall()
+            return [Customer(*row) for row in rows]  # Assuming row order matches constructor
+        except Exception as e:
+            print(f"Error loading customers from database: {e}")
             return []
-        with open(self.customers_file, 'r') as f:
-            data = json.load(f)
-            return [Customer.from_dict(c) for c in data]
 
     def save_customers(self):
         with open(self.customers_file, 'w') as f:
