@@ -111,8 +111,24 @@ class PharmacyApp:
             return []
 
     def save_medicines(self):
-        with open(self.medicines_file, 'w') as f:
-            json.dump([m.to_dict() for m in self.medicines], f, indent=4)
+        try:
+            for medicine in self.medicines:
+                data = medicine.to_dict()
+                self.cursor.execute("""
+                    INSERT INTO medicines (id, name, quantity, price)
+                    VALUES (%s, %s, %s, %s)
+                    ON DUPLICATE KEY UPDATE
+                        name = VALUES(name),
+                        quantity = VALUES(quantity),
+                        price = VALUES(price)
+                """, (data['id'], data['name'], data['quantity'], data['price']))
+
+            self.db.commit()
+            print("Medicines saved successfully to the MySQL database.")
+
+        except Exception as e:
+            self.db.rollback()
+            print(f"Error saving medicines to the database: {e}")
 
     def load_customers(self):
         try:
